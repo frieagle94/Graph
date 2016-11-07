@@ -20,4 +20,4 @@ A parte i metodi essenziali per la classe (tra cui conoscere il numero di nodi e
   arco tramite un metodo hasEdge.  
 
 Possono  essere  trascurate  considerazioni  di  efficienza  di  accesso  ai  dati  e  di occupazione di memoria.
-Utilizzare dove opportuno la gestione delle eccezioni e i funtori.0
+Utilizzare dove opportuno la gestione delle eccezioni e i funtori.
