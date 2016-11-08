@@ -14,6 +14,8 @@ E-MAIL..... r.frigerio5@campus.unimib.it
 #include <iterator>		// contiene std::forward_iterator_tag
 #include <cstddef>		// contiene std::ptrdiff_t
 
+#include "pair.h"
+
 /**
 	Definizione di una classe key_not_found() che estende le eccezioni standard
 	Sollevata nel caso in cui cerco un nodo/arco inesistente
@@ -138,101 +140,7 @@ class graph{
 	
 		}; // end struct node
 
-		/**
-		Definizione di una struct pair(T, T) che implementa una coppia di elementi di un arco del grafo			
-		@brief Struct che rappresenta una coppia di elementi base
-		*/
-		struct pair {
-
-			private:
-			
-				// DATI MEMBRO della coppia
-				T _src; ///< dato elementare T del nodo sorgente
-				T _dst;	///< dato elementare T del nodo destinazione
-					
-				void swap(pair &other){
-					std::swap(this -> _src, other._src);
-					std::swap(this -> _dst, other._dst);
-				}
 		
-			public:
-
-				/** 
-				COSTRUTTORE DI DEFAULT di una coppia
-				*/
- 				pair() : _src(NULL), _dst(NULL) {
-				}
-			
-				/**
-				Costruttore di una coppia dati due elementi
-				@param value1 dato elementare di tipo T che identifica il nodo sorgente
-				@param value2 dato elementare di tipo T che identifica il nodo destinazione
-				*/
-				pair(const T& value1, const T& value2) : _src(value1), _dst(value2) {
-				}
-		
-				/** 
-				DISTRUTTORE della coppia
-				*/
-				~pair() {
-				}
-		
-				/** 
-				COPY CONSTRUCTOR di una coppia 
-				@param other pair da copiare
-				**/
-				pair(const pair& other) : _src(other._src), _dst(other._dst) {	
-				}
-		
-				/**
-				OPERATOR= di una coppia
-				@param other pair da cui effettuare la copia
-				*/
-				pair& operator=(const pair &other) {
-				
-					if(this!=&other) {
-						
-						pair tmp(other);
-						tmp.swap(*this);
-					}
-		
-					return *this;
-				}
-		
-				/**
-				GETTER DELLA SORGENTE
-				@return reference all'elemento che identifica la sorgente
-				*/
-				T& src() {
-					return _src;
-				}
-		
-				/**
-				GETTER COSTANTE DELLA SORGENTE
-				@return reference costante all'elemento che identifica la sorgente
-				*/
-				const T& src() const {
-					return _src;
-				}
-		
-				/**
-				GETTER DELLA DESTINAZIONE
-				@return reference all'elemento che identifica la destinazione
-				*/
-				T& dst(){
-					return _dst;
-				}
-		
-				/**
-				GETTER COSTANTE DELLA DESTINAZIONE
-				@return reference costante all'elemento che identifica la destinazione
-				*/
-				const T& dst() const {
-						return _dst;
-				}
-			
-		}; //fine struct pair
-			
 		/**
 			Definizione di una struct edge(pair, edge*) che implementa un arco del grafo
 			@brief Struct che rappresenta un arco del grafo
@@ -240,7 +148,7 @@ class graph{
 		struct edge {
 		
 			// DATI MEMBRO dell'arco
-			pair _pair;		///< coppia di dati elementari T che rappresentano il nodo dell'arco 
+			pair<T> _pair;		///< coppia di dati elementari T che rappresentano il nodo dell'arco 
 			edge* _next;	///< puntatore all'arco successivo
 			
 			/** 
@@ -882,10 +790,10 @@ class graph{
 	}
 
 	/**	
-	Definizione di una classe const_iterator che implementa gli ITERATORI FORWARD sugli archi
+	Definizione di una classe const_iterator_E che implementa gli ITERATORI FORWARD sugli archi
 	@brief Classe che rappresenta un iteratore forward sugli archi
 	*/
-	class const_iterator_edge {
+	class const_iterator_E {
 	
 		private:
 			const edge* e;			///< puntatore all'arco contenente il dato "puntato" dall'iteratore	
@@ -895,35 +803,35 @@ class graph{
 			Costruttore secondario di un iteratore forward sugli archi, dato un puntatore all'arco
 			@param p puntatore all'arco
 			*/
-			const_iterator_edge(const edge* p): e(p) { 
+			const_iterator_E(const edge* p): e(p) { 
 			}
 		
 			public:
 		
 			//Traits degli iteratori
 			typedef std::forward_iterator_tag	iterator_category;	///< tag corrispondente all'iteratore forward
-			typedef pair			            value_type;			///< definizionde del tipo di dato "puntato" dall'iteratore
+			typedef pair<T>			            value_type;			///< definizionde del tipo di dato "puntato" dall'iteratore
 			typedef ptrdiff_t                	difference_type;	///< tipo (di default) usato per differenziare due puntatori
-			typedef const pair*			     	pointer;			///< definizione del puntatore al tipo di dato "puntato" dall'iteratore
-			typedef const pair&					reference; 			///< definizione del puntatore al tipo di dato "puntato" dall'iteratore
+			typedef const pair<T>*			     	pointer;			///< definizione del puntatore al tipo di dato "puntato" dall'iteratore
+			typedef const pair<T>&					reference; 			///< definizione del puntatore al tipo di dato "puntato" dall'iteratore
 		
 			/** 
 			COSTRUTTORE DEFAULT di un iteratore forward sugli archi
 			*/
-			const_iterator_edge() : e(NULL){
+			const_iterator_E() : e(NULL){
 			}					
 	
 			/** 
 			DISTRUTTORE di un iteratore forward sugli archi
 			*/
-			~const_iterator_edge() {
+			~const_iterator_E() {
 			}					
 		
 			/**
 			COPY CONSTRUCTOR di un iteratore forward sugli archi
 			@param other iteratore da cui copiare this
 			*/
-			const_iterator_edge(const const_iterator_edge &other): e(other.e){
+			const_iterator_E(const const_iterator_E &other): e(other.e){
 			}
 		
 			/**
@@ -931,10 +839,10 @@ class graph{
 			@param other iteratore di cui copio lo stato in this
 			@return iteratore risultante dalla copia 
 			*/
-			const_iterator_edge& operator=(const const_iterator_edge &other){
+			const_iterator_E& operator=(const const_iterator_E &other){
 				
 				if(this!=&other) {
-					const_iterator_edge tmp(other);
+					const_iterator_E tmp(other);
 					tmp.swap(*this);
 				}					
 				return *this;		
@@ -967,10 +875,10 @@ class graph{
 			@return puntatore allo stato precedente
 			@throw bad_iterator nel caso in cui si cerchi di incrementare un iteratore "nullo"
 			*/
-			const_iterator_edge operator++(int) {
+			const_iterator_E operator++(int) {
 				
 				if(e==NULL) throw bad_iterator("EXCEPTION: impossibile incrementare un iteratore nullo!");
-				const_iterator_edge tmp(*this);	//vecchio stato
+				const_iterator_E tmp(*this);	//vecchio stato
 				e = e -> _next; 			//cambio lo stato corrente
 				return tmp;					//ritorno il vecchio stato
 			}
@@ -980,7 +888,7 @@ class graph{
 			@return puntatore allo stato nuovo
 			@throw bad_iterator nel caso in cui si cerchi di incrementare un iteratore "nullo"
 			*/
-			const_iterator_edge& operator++() {
+			const_iterator_E& operator++() {
 				
 				if(e==NULL) throw bad_iterator("EXCEPTION: impossibile incrementare un iteratore nullo!");
 				e = e -> _next; //cambio lo stato corrente
@@ -992,7 +900,7 @@ class graph{
 			@param other iteratore da confrontare
 			@return true se other e' uguale al puntatore a archi, false altrimenti
 			*/
-			bool operator==(const const_iterator_edge &other) const {
+			bool operator==(const const_iterator_E &other) const {
 			
 				return (e == other.e);
 			}
@@ -1002,7 +910,7 @@ class graph{
 			@param other iteratore da confrontare
 			@return true se other e' diverso dal puntatore a archi, false altrimenti
 			*/
-			bool operator!=(const const_iterator_edge &other) const {
+			bool operator!=(const const_iterator_E &other) const {
 				
 				return (e != other.e);
 			}
@@ -1011,20 +919,20 @@ class graph{
 			Metodo utile allo swap dei dati membro di un iteratore forward sugli archi
 			@param other iteratore con cui scambiare i dati membro con this
 			*/
-			void swap(const_iterator_edge &other){
+			void swap(const_iterator_E &other){
 			
 				std::swap(this -> e, other.e);
 			}
 		
-	}; // end class const_iterator_edge
+	}; // end class const_iterator_E
 
 	/**
 	METODO PUBBLICO
 	Restituisce un const_iterator alla testa della lista degli archi del grafo
 	@return iteratore alla testa
 	*/
-	const_iterator_edge begin_edge() const{
-		return const_iterator_edge(_headE);
+	const_iterator_E begin_edge() const{
+		return const_iterator_E(_headE);
 	}
 
 	/**
@@ -1032,8 +940,8 @@ class graph{
 	Restituisce un const_iterator alla coda della lista degli archi del grafo
 	@return iteratore alla coda
 	*/
-	const_iterator_edge end_edge() const{
-		return const_iterator_edge(NULL);
+	const_iterator_E end_edge() const{
+		return const_iterator_E(NULL);
 	}
 
 }; // end class graph
@@ -1057,7 +965,7 @@ std::ostream& operator<<(std::ostream &os, const graph<T,funct> &g) {
 		
 	os << std::endl;
 	
-	typename graph<T,funct>::const_iterator_edge startE, endE;
+	typename graph<T,funct>::const_iterator_E startE, endE;
 	
 	for(startE = g.begin_edge(), endE = g.end_edge(); startE != endE; ++startE) 
 		os << "edge: " << startE -> src() << "," << startE -> dst() << "; ";
