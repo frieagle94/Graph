@@ -13,7 +13,6 @@ E-MAIL..... r.frigerio5@campus.unimib.it
 #include <new>			// contiene std::bad_alloc
 #include <iterator>		// contiene std::forward_iterator_tag
 #include <cstddef>		// contiene std::ptrdiff_t
-
 #include "pair.h"
 
 /**
@@ -65,10 +64,10 @@ class bad_iterator : public std::runtime_error{
 };
 
 /**
-	Definizione di una classe graph<T,funct> che implementa un grafo non orientato
+	Definizione di una classe graph<T,F> che implementa un grafo non orientato
 	@brief Classe che rappresenta un grafo
 */
-template<typename T, typename funct>
+template<typename T, typename F>
 class graph{
 
 	private:
@@ -223,7 +222,7 @@ class graph{
 		node* find_N_helper(const T &value) const{
 		
 			node *tmp = _headN; 
-			funct comp_node;
+			F comp_node;
 	
 			while(tmp!=0) {
 			
@@ -246,7 +245,7 @@ class graph{
 		edge* find_E_helper(const T &value1, const T &value2) const{
 			
 			edge *tmp = _headE;
-			funct comp_node;
+			F comp_node;
 			
 			while(tmp!=0){
 			
@@ -324,7 +323,7 @@ class graph{
 		*/
 		void update_edges(const T &value){
 			
-			funct comp;
+			F comp;
 			edge *tmpE = _headE;
 			edge *tmpE2 = NULL;
 			
@@ -347,7 +346,7 @@ class graph{
 		void safe_remove_edge(const T &value1, const T &value2){
 					
 				edge* tmp = _headE;
-				funct comp;				
+				F comp;				
 				if(comp(tmp -> _pair.src(),value1)&&comp(tmp -> _pair.dst(), value2)){
 				
 					_headE = tmp -> _next;
@@ -484,7 +483,7 @@ class graph{
 					num_nodes++;
 				}
 				catch(std::bad_alloc &e){
-				std::cout << e.what() << std::endl;
+					std::cout << e.what() << std::endl;
 					throw;
 				}
 			}
@@ -500,7 +499,7 @@ class graph{
 		void remove_node(const T &value){
 			if(!check_N(value)){
 				node* tmp = _headN;
-				funct comp;
+				F comp;
 				
 				if(comp(tmp -> _data,value)){
 					_headN = tmp -> _next;
@@ -578,7 +577,7 @@ class graph{
 		Stampa true se il valore corrisponde ad un nodo, false altrimenti
 		@param value dato elementare T del nodo che cerco
 		*/
-		void exists(const T &value){
+		void exists(const T &value) const{
 			if(!check_N(value))
 				std::cout <<  "exists(" << value << ") = true" << std::endl;
 			else
@@ -591,7 +590,7 @@ class graph{
 		@param value2 dato elementare T che rappresenta il nodo destinazione dell'arco che cerco
 		@throw key_not_found nel caso in cui si cerchi un arco su nodi inesistenti
 		*/
-		void has_edge(const T &value1, const T &value2){
+		void has_edge(const T &value1, const T &value2) const{
 		
 			if(!check_N(value1)&&!check_N(value2)){
 				
@@ -608,11 +607,11 @@ class graph{
 		@param value dato elementare T del nodo di cui stampare i "vicini"
 		@throw key_not_found nel caso in cui si cerchi un nodo inesistente
 		*/
-		void neighbors(const T &value){
+		void neighbors(const T &value) const{
 			if(!check_N(value)){
 			
 				edge *tmp = _headE;
-				funct comp_node;
+				F comp_node;
 		
 				std::cout << "neighbors(" << value << ")={";
 				
@@ -931,7 +930,7 @@ class graph{
 	Restituisce un const_iterator alla testa della lista degli archi del grafo
 	@return iteratore alla testa
 	*/
-	const_iterator_E begin_edge() const{
+	const_iterator_E begin_E() const{
 		return const_iterator_E(_headE);
 	}
 
@@ -940,7 +939,7 @@ class graph{
 	Restituisce un const_iterator alla coda della lista degli archi del grafo
 	@return iteratore alla coda
 	*/
-	const_iterator_E end_edge() const{
+	const_iterator_E end_E() const{
 		return const_iterator_E(NULL);
 	}
 
@@ -953,24 +952,24 @@ Permette di stampare il grafo su std::cout
 @param g grafo da stampare
 @return stream del grafo
 */
-template <typename T, typename funct>
-std::ostream& operator<<(std::ostream &os, const graph<T,funct> &g) {
+template <typename T, typename F>
+std::ostream& operator<<(std::ostream &os, const graph<T,F> &g) {
 	
-	os << "{" << std::endl;
+	os << "{";
 	
-	typename graph<T,funct>::const_iterator startN, endN;
+	typename graph<T,F>::const_iterator startN, endN;
 	
 	for(startN = g.begin(), endN = g.end(); startN != endN; ++startN) 
 		os << "node: " << *startN << "; ";
 		
 	os << std::endl;
 	
-	typename graph<T,funct>::const_iterator_E startE, endE;
+	typename graph<T,F>::const_iterator_E startE, endE;
 	
-	for(startE = g.begin_edge(), endE = g.end_edge(); startE != endE; ++startE) 
+	for(startE = g.begin_E(), endE = g.end_E(); startE != endE; ++startE) 
 		os << "edge: " << startE -> src() << "," << startE -> dst() << "; ";
 		
-	os << std::endl << "}";
+	os << "}"; 
 		
 	return os;
 }
